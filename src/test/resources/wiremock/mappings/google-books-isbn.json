@@ -1,0 +1,19 @@
+{
+  "id": "google-books-isbn-9780132350884",
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/books/v1/volumes",
+    "queryParameters": {
+      "q": {
+        "contains": "isbn:9780132350884"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "google-books-clean-code.json"
+  }
+}

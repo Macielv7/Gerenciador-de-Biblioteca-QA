@@ -1,0 +1,19 @@
+{
+  "id": "google-books-isbn-not-found",
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/books/v1/volumes",
+    "queryParameters": {
+      "q": {
+        "contains": "isbn:0000000000000"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": "{\"kind\":\"books#volumes\",\"totalItems\":0}"
+  }
+}

@@ -29,7 +29,9 @@ jobs:
       # 3. Roda os testes e gera relatório de cobertura JaCoCo
       #    ubuntu-latest tem Docker instalado nativamente, então Testcontainers funciona
       - name: Rodar testes com cobertura
-        run: ./mvnw clean verify
+        run: |
+          chmod +x mvnw
+          ./mvnw clean verify
 
       # 4. Análise de qualidade com SonarCloud
       #    Requer o secret SONAR_TOKEN configurado no repositório GitHub.

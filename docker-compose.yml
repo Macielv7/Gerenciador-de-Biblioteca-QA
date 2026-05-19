@@ -1,0 +1,19 @@
+# Docker Compose para desenvolvimento local
+# Uso: docker-compose up -d
+# Isso sobe um MongoDB na porta 27017 para você rodar o projeto localmente.
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: biblioteca-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      # Persiste os dados do banco entre reinicializações do container
+      - mongodb_data:/data/db
+    environment:
+      # Sem autenticação para facilitar o desenvolvimento local
+      MONGO_INITDB_DATABASE: biblioteca
+
+volumes:
+  mongodb_data:

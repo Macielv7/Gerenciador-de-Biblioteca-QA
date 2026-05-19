@@ -1,2 +1,12 @@
+# Normaliza line endings para LF no repositório (evita CRLF/LF misturados)
+* text=auto eol=lf
+
+# Scripts Maven Wrapper
 /mvnw text eol=lf
 *.cmd text eol=crlf
+
+# Arquivos binários (não alterar)
+*.jar binary
+*.png binary
+*.jpg binary
+*.gif binary

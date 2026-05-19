@@ -37,10 +37,11 @@ jobs:
       #    Requer o secret SONAR_TOKEN configurado no repositório GitHub.
       #    A organização e o host já estão definidos no pom.xml (sonar.organization, sonar.host.url).
       - name: Análise SonarCloud
+        if: ${{ secrets.SONAR_TOKEN != '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./mvnw sonar:sonar -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+        run: ./mvnw sonar:sonar -Dsonar.projectKey=macielv7_Gerenciador-de-Biblioteca-QA
 
       # 5. Publica o relatório de cobertura como artifact do workflow
       - name: Publicar relatório de cobertura (JaCoCo)

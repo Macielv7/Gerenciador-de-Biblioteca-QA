@@ -27,7 +27,6 @@ public class LivroServico {
                 .orElseThrow(() -> new IllegalArgumentException("Livro não encontrado: " + id));
         existente.setTitulo(atualizado.getTitulo());
         existente.setAutor(atualizado.getAutor());
-        existente.setIsbn(atualizado.getIsbn());
         existente.setEditora(atualizado.getEditora());
         existente.setAno(atualizado.getAno());
         existente.setGenero(atualizado.getGenero());

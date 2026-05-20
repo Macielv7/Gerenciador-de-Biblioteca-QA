@@ -2,10 +2,12 @@ package com.example.projeto.controller;
 
 import com.example.projeto.model.Livro;
 import com.example.projeto.service.LivroServico;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,7 +62,16 @@ public class LivroController {
     }
 
     @PostMapping
-    public String salvarLivro(@ModelAttribute Livro livro, Authentication auth, RedirectAttributes redirectAttributes) {
+    public String salvarLivro(@Valid @ModelAttribute Livro livro,
+                              BindingResult bindingResult,
+                              Model model,
+                              Authentication auth,
+                              RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("titulo", livro.getId() == null || livro.getId().isEmpty() ? "Novo Livro" : "Editar Livro");
+            return "livros/formulario";
+        }
+
         try {
             if (livro.getId() == null || livro.getId().isEmpty()) {
                 livroServico.criar(livro, auth.getName());

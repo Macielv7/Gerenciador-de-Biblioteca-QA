@@ -63,7 +63,7 @@
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Meus Livros</h2>
-            <a href="/livros/novo" class="btn btn-primary">
+            <a th:href="@{/livros/novo}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Novo Livro
             </a>
         </div>
@@ -86,7 +86,7 @@
                     <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
                     <h4 class="text-muted">Nenhum livro encontrado</h4>
                     <p class="text-muted">Comece adicionando seu primeiro livro!</p>
-                    <a href="/livros/novo" class="btn btn-primary">
+                    <a th:href="@{/livros/novo}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Adicionar Primeiro Livro
                     </a>
                 </div>
@@ -117,16 +117,18 @@
                         </p>
 
                         <div class="mt-auto">
-                            <div class="btn-group w-100" role="group">
-                                <a th:href="@{/livros/{id}/editar(id=${livro.id})}" class="btn btn-outline-primary btn-sm">
+                            <div class="d-flex gap-2 w-100">
+                                <a th:href="${#strings.isEmpty(livro.id)} ? @{/livros/sem-id/editar} : @{/livros/{id}/editar(id=${livro.id})}" class="btn btn-outline-primary btn-sm flex-fill">
                                     <i class="fas fa-edit"></i> Editar
                                 </a>
-                                <button type="button" class="btn btn-outline-danger btn-sm"
-                                        onclick="confirmarExclusao(this)"
-                                        th:data-id="${livro.id}"
-                                        th:data-titulo="${livro.titulo}">
-                                    <i class="fas fa-trash"></i> Excluir
-                                </button>
+                                <form th:action="${#strings.isEmpty(livro.id)} ? @{/livros/sem-id/deletar} : @{/livros/{id}/deletar(id=${livro.id})}" method="post" class="d-inline flex-fill">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                    <button type="submit"
+                                            class="btn btn-outline-danger btn-sm w-100"
+                                            th:attr="onclick=|return confirm('Tem certeza que deseja excluir este livro?')|">
+                                        <i class="fas fa-trash"></i> Excluir
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -150,6 +152,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <form id="formExclusao" th:action="@{/livros/{id}/deletar(id='PLACEHOLDER')}" method="post" class="d-inline">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                         <button type="submit" class="btn btn-danger">Excluir</button>
                     </form>
                 </div>

@@ -10,12 +10,12 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="/livros">
+            <a class="navbar-brand" th:href="@{/livros}">
                 <i class="fas fa-book"></i> Sistema de Livros
             </a>
             <div class="navbar-nav ms-auto">
                 <span class="navbar-text me-3">
-                    Olá, <span th:text="${#authentication.name}"></span>!
+                    Ola, <span th:text="${#authentication.name}"></span>!
                 </span>
                 <form th:action="@{/logout}" method="post" class="d-inline">
                     <button type="submit" class="btn btn-outline-light btn-sm">
@@ -35,70 +35,71 @@
                     </div>
                     <div class="card-body">
                         <form th:action="@{/livros}" method="post" th:object="${livro}">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                             <input type="hidden" th:field="*{id}">
 
-                            <div class="row mb-3">
-                                <div class="col-md-8">
-                                    <label for="titulo" class="form-label">Título *</label>
-                                    <input type="text" class="form-control" id="titulo" th:field="*{titulo}" required>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="isbn" class="form-label">ISBN</label>
-                                    <input type="text" class="form-control" id="isbn" th:field="*{isbn}"
-                                           placeholder="978-3-16-148410-0">
-                                </div>
+                            <div class="mb-3">
+                                <label for="titulo" class="form-label">Titulo *</label>
+                                <input type="text" class="form-control" id="titulo" th:field="*{titulo}" maxlength="120" required>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
                             </div>
 
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="autor" class="form-label">Autor *</label>
-                                    <input type="text" class="form-control" id="autor" th:field="*{autor}" required>
+                                    <input type="text" class="form-control" id="autor" th:field="*{autor}" maxlength="100" required>
+                                    <div class="text-danger small mt-1" th:if="${#fields.hasErrors('autor')}" th:errors="*{autor}"></div>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="ano" class="form-label">Ano</label>
                                     <input type="number" class="form-control" id="ano" th:field="*{ano}"
                                            min="1000" max="2030" placeholder="2024">
+                                    <div class="text-danger small mt-1" th:if="${#fields.hasErrors('ano')}" th:errors="*{ano}"></div>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="genero" class="form-label">Gênero</label>
+                                    <label for="genero" class="form-label">Genero</label>
                                     <select class="form-control" id="genero" th:field="*{genero}">
                                         <option value="">Selecione...</option>
-                                        <option value="Ficção">Ficção</option>
-                                        <option value="Não-ficção">Não-ficção</option>
+                                        <option value="Ficcao">Ficcao</option>
+                                        <option value="Nao-ficcao">Nao-ficcao</option>
                                         <option value="Romance">Romance</option>
                                         <option value="Fantasia">Fantasia</option>
-                                        <option value="Ficção Científica">Ficção Científica</option>
-                                        <option value="Mistério">Mistério</option>
+                                        <option value="Ficcao Cientifica">Ficcao Cientifica</option>
+                                        <option value="Misterio">Misterio</option>
                                         <option value="Terror">Terror</option>
                                         <option value="Biografia">Biografia</option>
-                                        <option value="História">História</option>
+                                        <option value="Historia">Historia</option>
                                         <option value="Autoajuda">Autoajuda</option>
-                                        <option value="Técnico">Técnico</option>
+                                        <option value="Tecnico">Tecnico</option>
                                         <option value="Outro">Outro</option>
                                     </select>
+                                    <div class="text-danger small mt-1" th:if="${#fields.hasErrors('genero')}" th:errors="*{genero}"></div>
                                 </div>
                             </div>
 
                             <div class="mb-3">
                                 <label for="editora" class="form-label">Editora</label>
-                                <input type="text" class="form-control" id="editora" th:field="*{editora}">
+                                <input type="text" class="form-control" id="editora" th:field="*{editora}" maxlength="100">
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('editora')}" th:errors="*{editora}"></div>
                             </div>
 
                             <div class="mb-3">
                                 <label for="urlCapa" class="form-label">URL da Capa</label>
                                 <input type="url" class="form-control" id="urlCapa" th:field="*{urlCapa}"
-                                       placeholder="https://exemplo.com/capa.jpg">
+                                       maxlength="500" placeholder="https://exemplo.com/capa.jpg">
                                 <div class="form-text">URL de uma imagem da capa do livro (opcional)</div>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('urlCapa')}" th:errors="*{urlCapa}"></div>
                             </div>
 
                             <div class="mb-3">
-                                <label for="descricao" class="form-label">Descrição</label>
+                                <label for="descricao" class="form-label">Descricao</label>
                                 <textarea class="form-control" id="descricao" th:field="*{descricao}"
-                                          rows="4" placeholder="Descrição do livro..."></textarea>
+                                          rows="4" maxlength="1000" placeholder="Descricao do livro..."></textarea>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('descricao')}" th:errors="*{descricao}"></div>
                             </div>
 
                             <div class="d-flex justify-content-between">
-                                <a href="/livros" class="btn btn-secondary">
+                                <a th:href="@{/livros}" class="btn btn-secondary">
                                     <i class="fas fa-arrow-left"></i> Voltar
                                 </a>
                                 <button type="submit" class="btn btn-primary">

@@ -40,6 +40,15 @@ Aplicação web completa para cadastro e gerenciamento de livros de uma bibliote
 
 ---
 
+## Observações de execução
+
+- Os testes usam Testcontainers e requerem o Docker Desktop em execução no Windows.
+- Foi ajustado o projeto para usar o Testcontainers `1.21.4`, que resolve a detecção do Docker Desktop via named pipe no Windows.
+- Use `./mvnw clean test` ou `./mvnw clean verify` para executar o projeto com o ambiente correto.
+
+
+---
+
 ## Como Executar Localmente
 
 ### 1. Clone o repositório

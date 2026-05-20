@@ -63,6 +63,20 @@ class LivroServicoTest {
     }
 
     @Test
+    @DisplayName("Deve gerar ID novo quando formulario envia ID vazio")
+    void shouldGenerateIdWhenFormSendsEmptyId() {
+        Livro livro = Livro.builder()
+                .id("")
+                .titulo("Livro com ID vazio")
+                .autor("Autor")
+                .build();
+
+        Livro salvo = livroServico.criar(livro, "alice");
+
+        assertThat(salvo.getId()).isNotBlank();
+    }
+
+    @Test
     @DisplayName("Deve atualizar campos de um livro existente")
     void shouldUpdateExistingBook() {
         Livro original = livroServico.criar(

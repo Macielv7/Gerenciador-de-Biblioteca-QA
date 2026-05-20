@@ -6,7 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -33,11 +38,19 @@ public class LivroController {
 
     @GetMapping("/{id}/editar")
     public String editarLivro(@PathVariable String id, Model model, Authentication auth) {
-        Livro livro = livroServico.encontrarPorId(id)
-                .orElseThrow(() -> new IllegalArgumentException("Livro não encontrado: " + id));
+        return abrirFormularioEdicao(id, model, auth);
+    }
 
-        // Verificar se o livro pertence ao usuário logado
-        if (!livro.getCriadoPor().equals(auth.getName())) {
+    @GetMapping("/sem-id/editar")
+    public String editarLivroSemId(Model model, Authentication auth) {
+        return abrirFormularioEdicao("", model, auth);
+    }
+
+    private String abrirFormularioEdicao(String id, Model model, Authentication auth) {
+        Livro livro = livroServico.encontrarPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Livro nao encontrado: " + id));
+
+        if (!auth.getName().equals(livro.getCriadoPor())) {
             throw new IllegalArgumentException("Acesso negado");
         }
 
@@ -65,12 +78,20 @@ public class LivroController {
 
     @PostMapping("/{id}/deletar")
     public String deletarLivro(@PathVariable String id, Authentication auth, RedirectAttributes redirectAttributes) {
+        return deletarLivroPorId(id, auth, redirectAttributes);
+    }
+
+    @PostMapping("/sem-id/deletar")
+    public String deletarLivroSemId(Authentication auth, RedirectAttributes redirectAttributes) {
+        return deletarLivroPorId("", auth, redirectAttributes);
+    }
+
+    private String deletarLivroPorId(String id, Authentication auth, RedirectAttributes redirectAttributes) {
         try {
             Livro livro = livroServico.encontrarPorId(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Livro não encontrado: " + id));
+                    .orElseThrow(() -> new IllegalArgumentException("Livro nao encontrado: " + id));
 
-            // Verificar se o livro pertence ao usuário logado
-            if (!livro.getCriadoPor().equals(auth.getName())) {
+            if (!auth.getName().equals(livro.getCriadoPor())) {
                 throw new IllegalArgumentException("Acesso negado");
             }
 

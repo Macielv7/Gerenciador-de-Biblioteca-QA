@@ -18,6 +18,7 @@ import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -141,6 +142,19 @@ class LivroControllerTest {
     }
 
     @Test
+    @DisplayName("[Caixa Preta] Deve editar livro antigo com ID vazio")
+    void shouldShowEditBookFormForLegacyEmptyId() throws Exception {
+        livroRepositorio.save(
+                Livro.builder().id("").titulo("Livro antigo").autor("Autor").criadoPor("alice").build());
+
+        mockMvc.perform(get("/livros/sem-id/editar")
+                        .with(user("alice").roles("USER")))
+                .andExpect(status().isOk())
+                .andExpect(view().name("livros/formulario"))
+                .andExpect(model().attributeExists("livro"));
+    }
+
+    @Test
     @DisplayName("[Caixa Preta] Deve negar acesso à edição de livro de outro usuário")
     void shouldDenyEditAccessToOtherUsersBook() throws Exception {
         Livro livroBob = livroRepositorio.save(
@@ -184,6 +198,22 @@ class LivroControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/livros"))
                 .andExpect(flash().attributeExists("mensagem"));
+    }
+
+    @Test
+    @DisplayName("[Caixa Preta] Deve deletar livro antigo com ID vazio")
+    void shouldDeleteLegacyEmptyIdBookAndRedirect() throws Exception {
+        livroRepositorio.save(
+                Livro.builder().id("").titulo("Para Deletar").autor("Autor").criadoPor("alice").build());
+
+        mockMvc.perform(post("/livros/sem-id/deletar")
+                        .with(user("alice").roles("USER"))
+                        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/livros"))
+                .andExpect(flash().attributeExists("mensagem"));
+
+        assertThat(livroRepositorio.findById("")).isEmpty();
     }
 
     @Test

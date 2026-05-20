@@ -16,6 +16,7 @@ public class LivroServico {
     private final LivroRepositorio livroRepositorio;
 
     public Livro criar(Livro livro, String criadoPor) {
+        livro.setId(null);
         livro.setCriadoPor(criadoPor);
         livro.setCriadoEm(LocalDateTime.now());
         return livroRepositorio.save(livro);
